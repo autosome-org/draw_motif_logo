@@ -21,4 +21,8 @@ or
 ```
 python3 -m drawlogo <options>...
 ```
+To get full usage description one can execute:
+```
+drawlogo --help
+```
 The drawlogo tool is maintained by Sergey Abramov and Alexandr Boytsov.
