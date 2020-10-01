@@ -1,8 +1,8 @@
 """
 
 Usage:
-    draw_logo <input-file> [-O <path> | --output <path>] [--words-count <int>] [-r | --revcomp]
-    draw_logo -h | --help
+    drawlogo <input-file> [-O <path> | --output <path>] [--words-count <int>] [-r | --revcomp]
+    drawlogo -h | --help
 
 Arguments:
     <input-file>     Path to input pcm or ppm matrix

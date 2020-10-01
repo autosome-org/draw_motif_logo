@@ -4,7 +4,7 @@ import os
 
 version_module = {}
 dir_name = os.path.dirname(__file__)
-with open(os.path.join(dir_name, "src", "motiflogo", "version.py")) as fp:
+with open(os.path.join(dir_name, "src", "drawlogo", "version.py")) as fp:
     exec(fp.read(), version_module)
     __version__ = version_module['__version__']
 
@@ -12,15 +12,15 @@ with open(os.path.join(dir_name, "README.md"), encoding='utf8') as fh:
     long_description = fh.read()
 
 setup(
-    name='draw-motif-logo',
+    name='drawlogo',
     version=__version__,
     packages=find_packages('src'),
     include_package_data=True,
-    package_data={'motiflogo': ['letters/*.svg']},
+    package_data={'drawlogo': ['letters/*.svg']},
     long_description=long_description,
     entry_points={
         'console_scripts': [
-            'draw_logo=motiflogo.start:main',
+            'drawlogo=drawlogo.start:main',
         ],
     },
     author="Sergey Abramov, Alexandr Boytsov",
