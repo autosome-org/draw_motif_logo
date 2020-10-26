@@ -124,7 +124,7 @@ def draw_logo(file_path, out_path, unit_width, unit_height, revcomp=False, words
                                 os.path.splitext(os.path.basename(file_path))[0],
                                 '_revcomp' if revcomp else ''))
     m, heights = get_heights(file_path, mode=mode, words=words)
-    fig = transform.SVGFigure("{}px".format(m * unit_width), "{}px".format(unit_height))
+    fig = transform.SVGFigure("{}".format(m * unit_width), "{}".format(unit_height))
 
     for pos, pack in enumerate(heights[::-1] if revcomp else heights):
         current_height = 0
