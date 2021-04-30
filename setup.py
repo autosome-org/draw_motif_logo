@@ -11,6 +11,7 @@ with open(os.path.join(dir_name, "src", "drawlogo", "version.py")) as fp:
 with open(os.path.join(dir_name, "README.md"), encoding='utf8') as fh:
     long_description = fh.read()
 
+# TODO add tests
 setup(
     name='drawlogo',
     version=__version__,
@@ -30,7 +31,7 @@ setup(
         'docopt>=0.6.2',
         'numpy>=1.18.0',
         'schema>=0.7.2',
-        'svgutils>=0.3.4',
+        'svgutils==0.3.1',
         'contextlib2>=0.5.5',
     ],
     extras_require={

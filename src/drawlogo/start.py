@@ -52,21 +52,9 @@ def get_KDIC(counts, N):
                 lgamma(N + 1) + sum([x * np.log(0.25) - lgamma(x + 1) for x in counts]))
 
 
-def get_heights(pcm_file, mode='freq', words=100):
+def get_heights(lines, mode='freq', words=100):
     heights = []
-    lines = []
     nucleotides = ['A', 'C', 'G', 'T']
-    if os.path.isfile(pcm_file):
-        with open(pcm_file) as f:
-            for line in f:
-                if line.startswith('>'):
-                    continue
-                try:
-                    lines.append(list(map(float, line.strip('\n').split('\t'))))
-                except ValueError:
-                    lines.append(list(map(float, line.strip('\n').split(' '))))
-    else:
-        lines = pcm_file
     m = len(lines)
     for counts in lines:
         N = sum(counts)
@@ -86,7 +74,7 @@ def place_letter_on_svg(figure, letter_svg, unit_width, x, y, h):
     letter_object = transform.fromfile(letter_svg)
     letter_root = letter_object.getroot()
     # 13.229 and 26.458 are letter svg view box w and h
-    letter_root.scale(unit_width/13.229, h/26.458)
+    letter_root.scale_xy(unit_width/13.229, h/26.458)
     letter_root.moveto(x, y)
     figure.append(letter_root)
 
@@ -108,15 +96,26 @@ def renorm(position):
     return zip(letters, new_heights)
 
 
-def draw_logo(file_path, out_path, unit_width, unit_height, revcomp=False, words=100, mode='KDIC'):
-    if os.path.isfile(file_path):
-        if file_path.endswith('.pcm'):
+def draw_logo(file_path_or_matrix, out_path, unit_width, unit_height, revcomp=False, words=100, mode='KDIC'):
+    if os.path.isfile(file_path_or_matrix):
+        if file_path_or_matrix.endswith('.pcm'):
             mode = 'KDIC'
-        elif file_path.endswith('.ppm'):
+        elif file_path_or_matrix.endswith('.ppm'):
             mode = 'freq'
         else:
-            raise ValueError(file_path, ' should ends with ".pcm" or ".ppm"')
-
+            raise ValueError(file_path_or_matrix, ' should ends with ".pcm" or ".ppm"')
+        lines = []
+        with open(file_path_or_matrix) as f:
+            for line in f:
+                if line.startswith('>'):
+                    continue
+                try:
+                    lines.append(list(map(float, line.strip('\n').split('\t'))))
+                except ValueError:
+                    lines.append(list(map(float, line.strip('\n').split(' '))))
+    else:
+        lines = file_path_or_matrix
+    m, heights = get_heights(lines, mode=mode, words=words)
     get_revcomp = {
         'A': 'T',
         'T': 'A',
@@ -124,10 +123,13 @@ def draw_logo(file_path, out_path, unit_width, unit_height, revcomp=False, words
         'G': 'C',
     }
     if os.path.isdir(out_path):
-        out_path = os.path.join(out_path, '{}{}.svg'.format(
-                                os.path.splitext(os.path.basename(file_path))[0],
-                                '_revcomp' if revcomp else ''))
-    m, heights = get_heights(file_path, mode=mode, words=words)
+        if os.path.isfile(file_path_or_matrix):
+            out_path = os.path.join(out_path, '{}{}.svg'.format(
+                                    os.path.splitext(os.path.basename(file_path_or_matrix))[0],
+                                    '_revcomp' if revcomp else ''))
+        else:
+            out_path = os.path.join(out_path, 'matrix{}.svg'.format('_revcomp' if revcomp else ''))
+
     fig = transform.SVGFigure("{}".format(m * unit_width), "{}".format(unit_height))
 
     for pos, pack in enumerate(heights[::-1] if revcomp else heights):
