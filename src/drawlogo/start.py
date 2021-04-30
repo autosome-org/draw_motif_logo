@@ -86,7 +86,7 @@ def place_letter_on_svg(figure, letter_svg, unit_width, x, y, h):
     letter_object = transform.fromfile(letter_svg)
     letter_root = letter_object.getroot()
     # 13.229 and 26.458 are letter svg view box w and h
-    letter_root.scale_xy(unit_width/13.229, h/26.458)
+    letter_root.scale(unit_width/13.229, h/26.458)
     letter_root.moveto(x, y)
     figure.append(letter_root)
 

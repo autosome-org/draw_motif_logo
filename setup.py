@@ -30,7 +30,7 @@ setup(
         'docopt>=0.6.2',
         'numpy>=1.18.0',
         'schema>=0.7.2',
-        'svgutils>=0.3.1',
+        'svgutils>=0.3.4',
         'contextlib2>=0.5.5',
     ],
     extras_require={
