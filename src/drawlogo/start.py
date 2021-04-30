@@ -56,14 +56,17 @@ def get_heights(pcm_file, mode='freq', words=100):
     heights = []
     lines = []
     nucleotides = ['A', 'C', 'G', 'T']
-    with open(pcm_file) as f:
-        for line in f:
-            if line.startswith('>'):
-                continue
-            try:
-                lines.append(list(map(float, line.strip('\n').split('\t'))))
-            except ValueError:
-                lines.append(list(map(float, line.strip('\n').split(' '))))
+    if os.path.isfile(pcm_file):
+        with open(pcm_file) as f:
+            for line in f:
+                if line.startswith('>'):
+                    continue
+                try:
+                    lines.append(list(map(float, line.strip('\n').split('\t'))))
+                except ValueError:
+                    lines.append(list(map(float, line.strip('\n').split(' '))))
+    else:
+        lines = pcm_file
     m = len(lines)
     for counts in lines:
         N = sum(counts)
@@ -105,13 +108,14 @@ def renorm(position):
     return zip(letters, new_heights)
 
 
-def draw_logo(file_path, out_path, unit_width, unit_height, revcomp=False, words=100):
-    if file_path.endswith('.pcm'):
-        mode = 'KDIC'
-    elif file_path.endswith('.ppm'):
-        mode = 'freq'
-    else:
-        raise ValueError(file_path, ' should ends with ".pcm" or ".ppm"')
+def draw_logo(file_path, out_path, unit_width, unit_height, revcomp=False, words=100, mode='KDIC'):
+    if os.path.isfile(file_path):
+        if file_path.endswith('.pcm'):
+            mode = 'KDIC'
+        elif file_path.endswith('.ppm'):
+            mode = 'freq'
+        else:
+            raise ValueError(file_path, ' should ends with ".pcm" or ".ppm"')
 
     get_revcomp = {
         'A': 'T',
