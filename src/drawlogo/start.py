@@ -168,7 +168,7 @@ def main():
     is_revcomp = args['--revcomp']
     n_words = args['--words-count']
 
-    unit_width = 300
-    unit_height = 600
+    unit_width = 30
+    unit_height = 60
     draw_logo(matrix_path, unit_width=unit_width, unit_height=unit_height,
               out_path=out_path, revcomp=is_revcomp, words=n_words)
