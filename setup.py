@@ -38,5 +38,5 @@ setup(
         'dev': ['wheel', 'twine', 'setuptools_scm'],
     },
     python_requires='>=3.6',
-    url="https://github.com/wish1/draw_motif_logo",
+    url="https://github.com/autosome-org/draw_motif_logo",
 )
