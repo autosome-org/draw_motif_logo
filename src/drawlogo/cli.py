@@ -18,12 +18,13 @@ Options:
 """
 
 from docopt import docopt
-from schema import Schema, And, Const, Use, SchemaError
+from schema import Schema, And, Const, Or, SchemaError, Use
 from svgutils import transform
 import numpy as np
 from math import lgamma
 import os
 import pathlib
+
 
 script_path = os.path.join(pathlib.Path(__file__).parent.absolute())
 
@@ -59,7 +60,7 @@ def get_heights(lines, mode='freq', words=100):
     for counts in lines:
         N = sum(counts)
         if mode == 'freq':
-            KDIC = get_KDIC([x*100 for x in counts], words)
+            KDIC = get_KDIC([x * words for x in counts], words)
             heights.append(sorted(list(zip(nucleotides, [(x / N) * KDIC for x in counts])),
                                   key=lambda x: x[1], reverse=True))
         elif mode == 'KDIC':
@@ -136,12 +137,26 @@ def draw_logo(file_path_or_matrix, out_path, unit_width, unit_height, revcomp=Fa
         current_height = 0
         for letter, height in renorm(pack):
             # Draw letter with offset of pos*unit_width, current_height*unit_height and height of height*unit_height
-            place_letter_on_svg(fig, get_letter_svg_by_name(get_revcomp[letter] if revcomp else letter), unit_width,
-                                pos*unit_width, (1-current_height - height)*unit_height, height*unit_height)
+            place_letter_on_svg(
+                fig,
+                get_letter_svg_by_name(get_revcomp[letter] if revcomp else letter),
+                unit_width,
+                pos * unit_width,
+                (1-current_height - height) * unit_height,
+                height * unit_height
+            )
             current_height += height
 
     fig.save(out_path)
 
+
+def dir_writable(x):
+    return os.path.isdir(x) and os.access(x, os.W_OK)
+
+
+def file_parent_writable(x):
+    parent = os.path.dirname(x) or '.'
+    return os.path.isdir(parent) and os.access(parent, os.W_OK)
 
 def main():
     args = docopt(__doc__)
@@ -150,9 +165,9 @@ def main():
             Const(os.path.exists, error='Input file should exist'),
             Const(lambda x: os.access(x, os.R_OK), error='No read permissions')
         ),
-        '--output': And(
-            Const(os.path.exists, error='Output path should exist'),
-            Const(lambda x: os.access(x, os.W_OK), error='No write permissions')
+        '--output': Or(
+            Const(dir_writable, error='No write permissions'),
+            Const(file_parent_writable, error='Parent not writable')
         ),
         '--words-count': Use(int, error='Number of words must be positive integer'),
         str: bool
@@ -170,5 +185,11 @@ def main():
 
     unit_width = 30
     unit_height = 60
-    draw_logo(matrix_path, unit_width=unit_width, unit_height=unit_height,
-              out_path=out_path, revcomp=is_revcomp, words=n_words)
+    draw_logo(
+        matrix_path,
+        unit_width=unit_width,
+        unit_height=unit_height,
+        out_path=out_path,
+        revcomp=is_revcomp,
+        words=n_words
+)

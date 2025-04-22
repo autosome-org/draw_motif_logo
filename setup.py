@@ -21,7 +21,7 @@ setup(
     long_description=long_description,
     entry_points={
         'console_scripts': [
-            'drawlogo=drawlogo.start:main',
+            'drawlogo=drawlogo.cli:main',
         ],
     },
     author="Sergey Abramov, Alexandr Boytsov",

@@ -1,5 +1,5 @@
 # Draw motif logo
-Python3 scripts to draw motif logo in svg format
+Python3 scripts to plot motif logo in HOCOMOCO style from PCM/PFM matrices
 
 
 ## Installation
@@ -17,12 +17,12 @@ python >= 3.6
 ```
 drawlogo <options>...
 ```
-or 
+or to import within python
 ```
-python3 -m drawlogo <options>...
+from drawlogo.cli import draw_logo
 ```
 To get full usage description one can execute:
 ```
 drawlogo --help
 ```
-The drawlogo tool is maintained by Sergey Abramov and Alexandr Boytsov.
+The drawlogo package is maintained by Sergey Abramov and Alexandr Boytsov.
